@@ -1,0 +1,22 @@
+name: Send Slack notification
+
+on:
+  workflow_run:
+    workflows: ["Deploy to EC2"]
+    types:
+      - completed
+
+jobs:
+  slack:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Send Slack notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        status: ${{ job.status }}
